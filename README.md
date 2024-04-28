@@ -1,1 +1,1 @@
-# cse547_seattle_911
+# Identifying Crime Micro Hotspots in Seattle through Density Clustering
