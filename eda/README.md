@@ -6,7 +6,7 @@
 3. Filter data with Offense Start Year from 2008 to 2023
 
 ### Distribution by Year
-![Distribution by Year](/img/distribution_by_year.png)
+![Distribution by Year](img/distribution_by_year.png)
 
 ### Distribution by MCPP
 ![Distribution by MCPP](/img/distribution_by_MCPP.png)
