@@ -13,6 +13,7 @@
 
 ### Distribution by Sector
 ![Distribution by Sector](img/distribution_by_sector.png)
+![Distribution by Sector](img/seattle_beatmpa.png)
 
 ### Distribution by Offenses
 ![Distribution by Offenses](img/distribution_by_offenses.png)
