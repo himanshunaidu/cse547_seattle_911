@@ -6,25 +6,25 @@
 3. Filter data with Offense Start Year from 2008 to 2023
 
 ### Distribution by Year
-![Distribution by Year](distribution_by_year.png)
+![Distribution by Year](/img/distribution_by_year.png)
 
 ### Distribution by MCPP
-![Distribution by MCPP](distribution_by_MCPP.png)
+![Distribution by MCPP](/img/distribution_by_MCPP.png)
 
 ### Distribution by Sector
-![Distribution by Sector](distribution_by_sector.png)
+![Distribution by Sector](/img/distribution_by_sector.png)
 
 ### Distribution by Offenses
-![Distribution by Offenses](distribution_by_offenses.png)
+![Distribution by Offenses](/img/distribution_by_offenses.png)
 
 ### Distribution by Offenses Group
-![Distribution by Offenses Group](distribution_by_offenses_group.png)
+![Distribution by Offenses Group](/img/distribution_by_offenses_group.png)
 
 ### Distribution by Crime Against Category
-![Distribution by Crime Against Category](distribution_by_crime_against_category.png)
+![Distribution by Crime Against Category](/img/distribution_by_crime_against_category.png)
 
 ### Distribution by Day
-![Distribution by Day](distribution_by_day.png)
+![Distribution by Day](/img/distribution_by_day.png)
 
 ### Distribution by Month
-![Distribution by Month](distribution_by_month.png)
+![Distribution by Month](/img/distribution_by_month.png)
