@@ -4,6 +4,7 @@ archive_yearly_extracts/
 
 # Data Files
 clustering/test.csv
+cluster_tracking/test.csv
 
 # File Format
 *.ipynb_checkpoints/
