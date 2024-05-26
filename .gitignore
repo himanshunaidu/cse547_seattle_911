@@ -1,2 +1,9 @@
+# Folders
 archive_data/
 archive_yearly_extracts/
+
+# Data Files
+clustering/test.csv
+
+# File Format
+*.ipynb_checkpoints/
