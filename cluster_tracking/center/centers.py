@@ -69,18 +69,17 @@ def get_std(df: pd.DataFrame, lat_col: str='Latitude', long_col: str='Longitude'
                                  centers_df[row[cluster_col]][long_col], centers_df[row[cluster_col]][lat_col]), axis=1)
     
     gb = df_filtered.groupby(cluster_col)
-    variances = gb.agg({distance_col: np.std, lat_col: 'mean', long_col: 'mean'}).reset_index()
+    variances = gb.agg({distance_col: 'std', lat_col: 'mean', long_col: 'mean'}).reset_index()
     # modes = modes.join(gb.size().to_frame(name='counts')).reset_index()
     return variances
 
-def centers_df_to_dict(centers_df: pd.DataFrame, cluster_col: str='cluster_labs', 
-                       lat_col: str='Latitude', long_col: str='Longitude'):
+def centers_df_to_dict(centers_df: pd.DataFrame, cluster_col: str='cluster_labs'):
     centers_df = centers_df.set_index(cluster_col)
     return centers_df.to_dict(orient='index')
 
 if __name__=='__main__':
     df = pd.read_csv('clustering/test.csv')
-    df = df[(df['Year'] == 2008) & (df['cluster_labs']!=-1) & (df['Sector']=='U')]
+    df = df[(df['Year'] == 2009) & (df['cluster_labs']!=-1) & (df['Sector']=='U')]
     print(df['Year'].unique(), df['cluster_labs'].unique(), df['Sector'].unique())
     centroids = get_std(df)
     print(centroids)
