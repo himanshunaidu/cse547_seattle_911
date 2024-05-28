@@ -79,7 +79,7 @@ def centers_df_to_dict(centers_df: pd.DataFrame, cluster_col: str='cluster_labs'
 
 if __name__=='__main__':
     df = pd.read_csv('clustering/test.csv')
-    df = df[(df['Year'] == 2009) & (df['cluster_labs']!=-1) & (df['Sector']=='U')]
+    df = df[(df['Year'] == 2008) & (df['cluster_labs']!=-1) & (df['Sector']=='U')]
     print(df['Year'].unique(), df['cluster_labs'].unique(), df['Sector'].unique())
     centroids = get_std(df)
     print(centroids)
