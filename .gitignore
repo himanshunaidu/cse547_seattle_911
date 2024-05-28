@@ -1,0 +1,12 @@
+# Folders
+archive_data/
+archive_yearly_extracts/
+cluster_tracking/archive_code/
+
+# Data Files
+clustering/test.csv
+cluster_tracking/test.csv
+
+# File Format
+*.ipynb_checkpoints/
+__pycache__/
