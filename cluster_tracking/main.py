@@ -22,6 +22,22 @@ else:
     from clustering.distance.distances import haversine_np, meters_to_hav, RADIUS_OF_EARTH_AT_SPACE_NEEDLE
 
 
+def cluster_matches(data_path):
+    df = pd.read_csv(data_path)
+    df = df[(df['Sector']=='U') & (df['cluster_labs']!=-1)]
+
+    years = df['Year'].unique()
+    years.sort()
+    for i in range(1, len(years)-1):
+        year1 = years[i]
+        year2 = years[i+1]
+        df1 = df[df['Year'] == year1]
+        df2 = df[df['Year'] == year2]
+
+        cluster1_ind, cluster2_ind, row_ind, col_ind = match_clusters(df1, df2)
+        print(f'{year1} {year2}: {row_ind}, {col_ind}')
+
+
 def main(data_path):
     df = pd.read_csv(data_path)
     df0 = df[(df['Sector']=='U') & (df['cluster_labs']!=-1)]
@@ -64,4 +80,5 @@ def main(data_path):
 
 if __name__=='__main__':
     data_path = 'clustering/test.csv'
-    main(data_path)
+    # main(data_path)
+    cluster_matches(data_path)
