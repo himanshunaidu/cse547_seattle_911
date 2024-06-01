@@ -60,7 +60,8 @@ def min_cluster_assignment(cost_matrix, std1, std2, distance_col='Distance'):
             continue
         cost_array = cost_matrix[i, :]
         for j, cost in enumerate(cost_array):
-            cost_array[j] = cost / (std1[i][distance_col] * std2[j][distance_col])
+            denominator = (std1[i][distance_col] if std1[i][distance_col] != 0 else 1) * (std2[j][distance_col] if std2[j][distance_col] != 0 else 1)
+            cost_array[j] = cost / (denominator)
         # print(cost_array)
         min_index = np.argmin(cost_array)
         row_ind.append(i)
@@ -72,7 +73,8 @@ def min_cluster_assignment(cost_matrix, std1, std2, distance_col='Distance'):
             continue
         cost_array = cost_matrix[:, j]
         for i, cost in enumerate(cost_array):
-            cost_array[i] = cost / (std1[i][distance_col] * std2[j][distance_col])
+            denominator = (std1[i][distance_col] if std1[i][distance_col] != 0 else 1) * (std2[j][distance_col] if std2[j][distance_col] != 0 else 1)
+            cost_array[i] = cost / (denominator)
         # print(cost_array)
         min_index = np.argmin(cost_array)
         row_ind.append(min_index)

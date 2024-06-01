@@ -52,7 +52,7 @@ def holc_grade_counts_to_dict(holc_df_counts: pd.Series):
 
 def normalize_count_dict(count_dict):
     total = sum(count_dict.values())
-    return {key: value/total for key, value in count_dict.items()}
+    return {key: value*100/total for key, value in count_dict.items()}
 
 def run_chi_square_test(holc_counts_dict1, holc_counts_dict2):
     observed = [holc_counts_dict1[grade] for grade in grade_keys]
