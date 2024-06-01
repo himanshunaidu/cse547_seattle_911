@@ -50,8 +50,38 @@ def compute_cost_matrix(clusters1, clusters2, centroids1 = None, centroids2 = No
                                                 centroids2[c2][long_col], centroids2[c2][lat_col])
             if centroid_distance < max(2*std1[c1][distance_col], 2*std2[c2][distance_col]):
                 cost_matrix[i, j] = alpha*centroid_distance
-    
     return cost_matrix
+
+def min_cluster_assignment(cost_matrix, std1, std2, distance_col='Distance'):
+    row_ind, col_ind = [], []
+    # First run: match all the clusters in window 1 with those of window 2, with only 1:1/n:1 pairings possible.
+    for i in range(cost_matrix.shape[0]):
+        if np.isinf(cost_matrix[i, :]).all():
+            continue
+        cost_array = cost_matrix[i, :]
+        for j, cost in enumerate(cost_array):
+            denominator = (std1[i][distance_col] if std1[i][distance_col] != 0 else 1) * (std2[j][distance_col] if std2[j][distance_col] != 0 else 1)
+            cost_array[j] = cost / (denominator)
+        # print(cost_array)
+        min_index = np.argmin(cost_array)
+        row_ind.append(i)
+        col_ind.append(min_index)
+    # Second run: check all the clusters in window 2 that have not been assigned, 
+    # and match clusters in window 1 with these remaining clusters, and this time, can have 1:n pairing
+    for j in range(cost_matrix.shape[1]):
+        if j in col_ind or np.isinf(cost_matrix[:, j]).all():
+            continue
+        cost_array = cost_matrix[:, j]
+        for i, cost in enumerate(cost_array):
+            denominator = (std1[i][distance_col] if std1[i][distance_col] != 0 else 1) * (std2[j][distance_col] if std2[j][distance_col] != 0 else 1)
+            cost_array[i] = cost / (denominator)
+        # print(cost_array)
+        min_index = np.argmin(cost_array)
+        row_ind.append(min_index)
+        col_ind.append(j)
+    
+    return row_ind, col_ind
+        
 
 def match_clusters(clusters1, clusters2, lat_col='Latitude', long_col='Longitude', cluster_col='cluster_labs', distance_col='Distance', 
                    noise_label=-1, distance_metric=haversine_np, alpha=1):
@@ -71,5 +101,6 @@ def match_clusters(clusters1, clusters2, lat_col='Latitude', long_col='Longitude
     cost_matrix = compute_cost_matrix(clusters1, clusters2, centroids1, centroids2, std1, std2, 
                                       lat_col, long_col, cluster_col, distance_col, noise_label, distance_metric, alpha)
 
-    row_ind, col_ind = linear_sum_assignment(cost_matrix)
+    # row_ind, col_ind = linear_sum_assignment(cost_matrix)
+    row_ind, col_ind = min_cluster_assignment(cost_matrix, std1, std2)
     return cluster1_ind, cluster2_ind, row_ind, col_ind

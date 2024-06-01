@@ -9,6 +9,8 @@ import sys
 from center.centers import get_centroids, get_medoids, get_modes, get_std, centers_df_to_dict
 from match.hungarian import match_clusters
 from distance.emd import get_emd
+from redlining.redlining import get_holc_grade, holc_grade_counts_to_dict, get_all_redlining_value_counts, \
+    run_chi_square_test, normalize_count_dict
 if __name__=='__main__':
     if __package__ is None:
         import os.path as path
@@ -20,10 +22,27 @@ else:
     from clustering.distance.distances import haversine_np, meters_to_hav, RADIUS_OF_EARTH_AT_SPACE_NEEDLE
 
 
+def cluster_matches(data_path):
+    df = pd.read_csv(data_path)
+    df = df[(df['Sector']=='U') & (df['cluster_labs']!=-1)]
+
+    years = df['Year'].unique()
+    years.sort()
+    for i in range(1, len(years)-1):
+        year1 = years[i]
+        year2 = years[i+1]
+        df1 = df[df['Year'] == year1]
+        df2 = df[df['Year'] == year2]
+
+        cluster1_ind, cluster2_ind, row_ind, col_ind = match_clusters(df1, df2)
+        print(f'{year1} {year2}: {row_ind}, {col_ind}')
+
+
 def main(data_path):
     df = pd.read_csv(data_path)
-    df1 = df[(df['Year'] == 2008) & (df['Sector']=='U')]
-    df2 = df[(df['Year'] == 2009) & (df['Sector']=='U')]
+    df0 = df[(df['Sector']=='U') & (df['cluster_labs']!=-1)]
+    df1 = df[(df['Year'] == 2008) & (df['Sector']=='U') & (df['cluster_labs']!=-1)]
+    df2 = df[(df['Year'] == 2009) & (df['Sector']=='U') & (df['cluster_labs']!=-1)]
 
     cluster1_ind, cluster2_ind, row_ind, col_ind = match_clusters(df1, df2)
     ind1_cluster1 = {v: k for k, v in cluster1_ind.items()}
@@ -35,16 +54,31 @@ def main(data_path):
     print(cluster1_no_match, cluster2_no_match)
     
     distance = 0
+    count = 0
     for row, col in zip(row_ind, col_ind):
         distance += get_emd(df1[df1['cluster_labs']==ind1_cluster1[row]], df2[df2['cluster_labs']==ind2_cluster2[col]])
+        count += 1
     for c1 in cluster1_no_match:
         distance += get_emd(df1[df1['cluster_labs']==c1], df2[df2['cluster_labs']==-1])
+        count += 1
     for c2 in cluster2_no_match:
         distance += get_emd(df1[df1['cluster_labs']==-1], df2[df2['cluster_labs']==c2])
+        count += 1
     print(distance)
-    print(distance/(df1.shape[0]+df2.shape[0]))
+    print(distance/count)
+
+    holc_df0 = get_holc_grade(df0)
+    all_holc_value_counts = get_all_redlining_value_counts()
+    u_holc_value_counts = holc_df0['grade'].value_counts(dropna=False)
+    print(holc_grade_counts_to_dict(all_holc_value_counts))
+    print(holc_grade_counts_to_dict(u_holc_value_counts))
+
+    chi2, p = run_chi_square_test(normalize_count_dict(holc_grade_counts_to_dict(all_holc_value_counts)), 
+                                  normalize_count_dict(holc_grade_counts_to_dict(u_holc_value_counts)))
+    print(chi2, p)
 
 
 if __name__=='__main__':
     data_path = 'clustering/test.csv'
-    main(data_path)
+    # main(data_path)
+    cluster_matches(data_path)
